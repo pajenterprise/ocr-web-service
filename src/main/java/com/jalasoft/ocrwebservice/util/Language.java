@@ -1,8 +1,8 @@
 package com.jalasoft.ocrwebservice.util;
 
 public enum Language {
-    EN("en"),
-    ES("es");
+    EN("eng"),
+    ES("esp");
 
     private String abbreviation;
 
