@@ -29,8 +29,9 @@ public class ConvertImageToText implements IConvert{
 	@Override
 	public String Convert(Criteria cri) {
 		ITesseract instance = new Tesseract();  
-		// path to tessdata directory|
+		// path to tessdata directory
 		instance.setDatapath("thirdParty/Tess4J/tessdata"); 
+		instance.setLanguage(cri.getAttribute());
 
 		try {
 			String result = instance.doOCR(cri.getFile());

@@ -17,10 +17,10 @@ package com.jalasoft.webservice.model;
 import java.io.File;
 /**
  * *
- * This class is our source object we want to convert
+ * This abstract class is our source/destination type of object we want to convert
  *
  */
-public class Criteria {
+public abstract class Criteria {
 	File filePath;
 
 	public Criteria(String sourcePath){
@@ -31,4 +31,6 @@ public class Criteria {
 	public File getFile() {
 		return filePath;
 	}
+
+	public abstract String getAttribute();
 }
