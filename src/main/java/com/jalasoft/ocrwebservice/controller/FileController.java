@@ -1,6 +1,9 @@
 package com.jalasoft.ocrwebservice.controller;
 
 import com.jalasoft.ocrwebservice.exception.LanguageException;
+import com.jalasoft.ocrwebservice.model.ConvertImageToText;
+import com.jalasoft.ocrwebservice.model.Criteria;
+import com.jalasoft.ocrwebservice.model.CriteriaText;
 import com.jalasoft.ocrwebservice.service.FileStorageService;
 import com.jalasoft.ocrwebservice.util.Language;
 import org.slf4j.Logger;
@@ -8,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.jalasoft.ocrwebservice.util.Constant.RESOURCE_DIR;
 
 @RestController
 public class FileController {
@@ -25,7 +30,11 @@ public class FileController {
                 lang.equalsIgnoreCase(Language.ES.getAbbreviation())) {
             String fileName = fileStorageService.storeFile(file);
 
-            return String.format("The '%s' file was uploaded successfully.", fileName);
+            Criteria image = new CriteriaText(RESOURCE_DIR, fileName, lang);
+            ConvertImageToText test = new ConvertImageToText();
+            String textResult = test.Convert(image);
+
+            return String.format("The '%s' file was uploaded successfully.\n'%s'", fileName, textResult);
         } else {
             throw new LanguageException(String.format("The '%s' language isn't supported.", lang));
         }
