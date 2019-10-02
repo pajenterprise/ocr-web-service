@@ -28,8 +28,12 @@ public class ConnectionDB  {
 					+ "checksum varchar(32),"
 					+ "path varchar(250));");
 		}
-		catch (ClassNotFoundException c ){}
-		catch (SQLException s){}
+		catch (ClassNotFoundException c ){
+			System.out.println(c.getException());
+		}
+		catch (SQLException s){
+			System.out.println(s.getErrorCode());
+		}
 	}
 	public static Connection getConnection() {
 		return conn;
