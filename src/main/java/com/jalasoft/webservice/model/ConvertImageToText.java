@@ -15,6 +15,7 @@
  */
 package com.jalasoft.webservice.model;
 
+import com.jalasoft.webservice.exception.ConvertException;
 import net.sourceforge.tess4j.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -27,21 +28,22 @@ import java.io.UnsupportedEncodingException;
 public class ConvertImageToText implements IConvert{
 
 	@Override
-	public String Convert(Criteria cri) {
-		ITesseract instance = new Tesseract();  
+	public Response Convert(Criteria cri) throws ConvertException {
+		TextResponse result = new TextResponse();
+		ITesseract instance = new Tesseract();
 		// path to tessdata directory
 		instance.setDatapath("thirdParty/Tess4J/tessdata"); 
 		instance.setLanguage(cri.getAttribute());
 
 		try {
-			String result = instance.doOCR(cri.getFile());
+			String result2 = instance.doOCR(cri.getFile());
 			PrintWriter writer = new PrintWriter("result.txt", "UTF-8");
-			writer.println(result);
+			writer.println(result2);
 			writer.close();
 
 		} catch (TesseractException e) {
 
-			return(e.getMessage());
+			throw new ConvertException("My exception" +e.getMessage(), e);
 
 		} catch (FileNotFoundException e) {
 
@@ -50,7 +52,9 @@ public class ConvertImageToText implements IConvert{
 
 			e.printStackTrace();
 		}
-		return ("result.txt");
+		result.setUrl("result.txt");
+		return result;
+
 	}
 
 

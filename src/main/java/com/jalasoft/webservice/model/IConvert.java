@@ -14,10 +14,13 @@
  * with Jalasoft.
  */
 package com.jalasoft.webservice.model;
+
+import com.jalasoft.webservice.exception.ConvertException;
+
 /**
  * The interface is an abstraction of multiple converts
  */
 public interface IConvert {
 
-	String Convert(Criteria cri); 
+	Response Convert(Criteria cri) throws ConvertException;
 }

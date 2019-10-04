@@ -11,14 +11,20 @@
 package com.jalasoft.webservice;
 import com.jalasoft.webservice.database.ConnectionDB;
 import com.jalasoft.webservice.database.DBQuery;
+import com.jalasoft.webservice.exception.ConvertException;
 import com.jalasoft.webservice.model.*;
 
 
 public class Main {
 
 	public static void main(String[] args) {
-		DBQuery query = new DBQuery();
-		query.insert("123","C:\\");
-System.out.println("result: "+query.getPath("123"));
+try {
+	Criteria image = new CriteriaText("thirdParty/Tess4J/test/resources/test-data/eurotexts.tif", "por");
+	ConvertImageToText test = new ConvertImageToText();
+	System.out.println(test.Convert(image));
+}
+catch (ConvertException c){
+	System.out.println(c.getMessage());
+}
 	}
 }
