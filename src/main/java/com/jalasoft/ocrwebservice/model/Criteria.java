@@ -13,7 +13,11 @@ package com.jalasoft.ocrwebservice.model;
  * with Jalasoft.
  */
 
+import com.jalasoft.ocrwebservice.exception.FileStorageException;
+
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * *
@@ -23,10 +27,19 @@ import java.io.File;
 public abstract class Criteria {
     private File filePath;
     private String fileName;
+    private String checksum ="123";
 
     public Criteria(String sourcePath, String fileName){
         filePath = new File(sourcePath + fileName);
         this.fileName = fileName;
+        DBManager db=new DBManager();
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            String checksum = md.digest().toString();
+        }catch (NoSuchAlgorithmException e){
+            new FileStorageException("Error when generating checksum");
+        }
+        db.addFile(checksum,fileName);
     }
 
     public File getFile() {
