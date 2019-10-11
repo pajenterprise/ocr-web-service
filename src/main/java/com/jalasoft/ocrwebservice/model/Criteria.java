@@ -14,6 +14,7 @@ package com.jalasoft.ocrwebservice.model;
  */
 
 import com.jalasoft.ocrwebservice.exception.FileStorageException;
+import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 
 import java.io.File;
 import java.security.MessageDigest;
@@ -48,4 +49,13 @@ public abstract class Criteria {
 
     public abstract String getAttribute();
     public abstract String getFileName();
+
+    public void validate() throws ParameterInvalidException {
+       /* if (filePath.isEmpty()){
+            throw new ParameterInvalidException(11, "filePath");
+        }*/
+        if (this.filePath == null){
+            throw new ParameterInvalidException(10, "filePath");
+        }
+    }
 }

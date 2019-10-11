@@ -13,6 +13,8 @@ package com.jalasoft.ocrwebservice.model;
  * with Jalasoft.
  */
 
+import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
+
 /**
  * *
  * Criteria Text (file txt) language
@@ -39,4 +41,15 @@ public class CriteriaText extends Criteria {
         return this.fileName;
     }
 
+    @Override
+    public void validate() throws ParameterInvalidException {
+        super.validate();
+        if (this.lang.isEmpty()){
+            throw new ParameterInvalidException(11, "lang");
+        }
+        if (this.lang == null){
+            throw new ParameterInvalidException(10, "lang");
+        }
+
+    }
 }

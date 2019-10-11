@@ -1,9 +1,12 @@
 package com.jalasoft.ocrwebservice.controller;
 
 import com.jalasoft.ocrwebservice.exception.LanguageException;
-import com.jalasoft.ocrwebservice.model.*;
+import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
+import com.jalasoft.ocrwebservice.model.ConvertImageToText;
+import com.jalasoft.ocrwebservice.model.Criteria;
+import com.jalasoft.ocrwebservice.model.CriteriaText;
 import com.jalasoft.ocrwebservice.service.FileStorageService;
-import com.jalasoft.ocrwebservice.util.*;
+import com.jalasoft.ocrwebservice.util.Language;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,41 +23,34 @@ public class FileController {
     @Autowired
     private FileStorageService fileStorageService;
 
-    @PostMapping("/uploadFile")
+    @PostMapping("/api/v1/uploadFile")
     public String uploadFile(@RequestParam("file") MultipartFile file,
                              @RequestParam("lang") String lang) {
-        // Verifying the correct language
-        if (lang.equalsIgnoreCase(Language.EN.getAbbreviation()) ||
-                lang.equalsIgnoreCase(Language.ES.getAbbreviation())) {
-            String fileName = fileStorageService.storeFile(file);
+        try {
+            // Verifying the correct language
+            if (lang.equalsIgnoreCase(Language.EN.getAbbreviation()) ||
+                    lang.equalsIgnoreCase(Language.ES.getAbbreviation())) {
+                String fileName = fileStorageService.storeFile(file);
 
-            Criteria image = new CriteriaText(RESOURCE_DIR, fileName, lang);
-            ConvertImageToText test = new ConvertImageToText();
-            String textResult = test.Convert(image);
+                Criteria image = new CriteriaText(RESOURCE_DIR, fileName, lang);
+                image.validate();
+                ConvertImageToText test = new ConvertImageToText();
+                String textResult = test.Convert(image);
 
-            return String.format("The '%s' file was uploaded successfully.\n'%s'", fileName, textResult);
-        } else {
-            throw new LanguageException(String.format("The '%s' language isn't supported.", lang));
+                return String.format("The '%s' file was uploaded successfully.\n'%s'", fileName, textResult);
+            } else {
+                throw new LanguageException(String.format("The '%s' language isn't supported.", lang));
+            }
+        }catch (ParameterInvalidException e){
+            System.out.println("Param");
+            return ("Some parameters are invalid");
+           //return (e.getMessage());
+        }catch (Exception other){
+            System.out.println("An error");
+            return (other.getMessage());
         }
-    }
-    @PostMapping("/convertPDF2Image")
-    public String uploadPDF(@RequestParam("file") MultipartFile file,
-                            @RequestParam(value = "type", defaultValue = "jpg") String type,
-                            @RequestParam(value = "width", defaultValue = "600") int width,
-                            @RequestParam(value="height", defaultValue = "800") int height) {
-        // Verifying the correct type
-        if (type.equalsIgnoreCase(ImageType.JPG.getExtension()) ||
-                type.equalsIgnoreCase(ImageType.PNG.getExtension()) ||
-                type.equalsIgnoreCase(ImageType.TIF.getExtension()) ||
-                type.equalsIgnoreCase(ImageType.BMP.getExtension())  ) {
-            String fileName = fileStorageService.storeFile(file);
-          //  Criteria pdf = new CriteriaPDF(RESOURCE_DIR , fileName);
-           // ConvertImageToText test = new ConvertImageToText();
-         //   String textResult = test.Convert(image);
-            String textResult ="/public/result."+type;
-            return String.format("The '%s' file was converted successfully. \n'%s'", fileName, textResult);
-        } else {
-            throw new LanguageException(String.format("The '%s' file type isn't supported.", type));
+        finally {
+            return ":)";
         }
     }
 }

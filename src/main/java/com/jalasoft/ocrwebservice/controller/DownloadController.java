@@ -9,6 +9,7 @@
  */
 package com.jalasoft.ocrwebservice.controller;
 
+import com.jalasoft.ocrwebservice.exception.MyFileNotFoundException;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,12 +24,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
-
+/**
+ * End point to get downloaded a file
+ */
 @RestController
-@RequestMapping("/download")
+@RequestMapping("/api/v1/download")
 class DownloadController {
 
-    @GetMapping("/file/{fileName:.+}")
+    @GetMapping("file/{fileName:.+}")
     public void getFile(HttpServletResponse response, @PathVariable("fileName") String fileName){
 
         File file = new File(Paths.get("").toAbsolutePath().toString() + "\\public\\" + fileName);
@@ -42,9 +45,11 @@ class DownloadController {
                 inputStream = new BufferedInputStream(new FileInputStream(file));
                 FileCopyUtils.copy(inputStream, response.getOutputStream());
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                throw new MyFileNotFoundException("File not found" );
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new MyFileNotFoundException(e.getMessage());
+            } catch (Exception other){
+                other.printStackTrace();
             }
         }
     }
