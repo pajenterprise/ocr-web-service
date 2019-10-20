@@ -27,12 +27,27 @@ public class ConnectionDB  {
                     + "id integer primary key,"
                     + "checksum varchar(32),"
                     + "path varchar(250));");
+            System.out.println("Table fileST created");
+            state.execute("create table if not exists users("
+                    + "id integer primary key,"
+                    + "userId varchar(32),"
+                    + "password varchar(50));");
+            System.out.println("Table users created");
+            state.execute("create table if not exists employee("
+                    + "id integer primary key,"
+                    + "employeeId varchar(32),"
+                    + "name varchar(32),"
+                    + "lastName varchar(32),"
+                    + "jobTitle varchar(32),"
+                    + "hiredDate varchar(32),"
+                    + "photoPath varchar(250));");
+            System.out.println("Table employee created");
         }
         catch (ClassNotFoundException c ){
-            System.out.println(c.getException());
+            c.printStackTrace();
         }
         catch (SQLException s){
-            System.out.println(s.getErrorCode());
+            s.printStackTrace();
         }
     }
     public static Connection getConnection() {

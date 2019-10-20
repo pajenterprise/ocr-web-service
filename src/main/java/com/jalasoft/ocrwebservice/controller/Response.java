@@ -9,28 +9,77 @@
  */
 package com.jalasoft.ocrwebservice.controller;
 
+import org.springframework.http.HttpStatus;
+
+import java.util.List;
+
 /**
  * Class Response to handle HTTP Code Responses
  */
-public class Response {
+public class Response<T> {
 
-    private String message;
-    private String details;
-    private String httpCodeMessage;
-    public Response(String message, String details,String httpCodeMessage) {
-        super();
+    private HttpStatus status;
+    private ResponseBody<T> body;
 
-        this.message = message;
-        this.details = details;
-        this.httpCodeMessage=httpCodeMessage;
+    /**
+     * Constructor.
+     */
+    public Response() {
+        body = new ResponseBody<>();
     }
-    public String getHttpCodeMessage() {
-        return httpCodeMessage;
+
+    /**
+     * @return httpStatus.
+     */
+    public HttpStatus getHttpStatus() {
+        return status;
     }
-     public String getMessage() {
-        return message;
+
+    /**
+     * @param httpStatus httpStatus.
+     * @return Response.
+     */
+    public Response<T> setHttpStatus(final HttpStatus httpStatus) {
+        this.status = httpStatus;
+        return this;
     }
-    public String getDetails() {
-        return details;
+
+
+    /**
+     * @return Response.
+     */
+    public ResponseBody<T> getBody() {
+        return body;
+    }
+
+    /**
+     * @param body body.
+     * @return Response.
+     */
+    public Response<T> setBody(final ResponseBody<T> body) {
+        this.body = body;
+        return this;
+    }
+    public Response NotFound(String item) {
+        this.status= HttpStatus.NOT_FOUND;
+        body.setTextMessage( item + " was not found");
+        return this;
+    }
+
+    public Response badRequest(String item) {
+        this.status= HttpStatus.BAD_REQUEST;
+        body.setTextMessage( item + " incorrect");
+        return this;
+    }
+
+    public Response OK(String valid_user) {
+        this.status= HttpStatus.OK;
+        body.setTextMessage("Success");
+        System.out.println("Success");
+        return this;
     }
 }
+
+
+
+

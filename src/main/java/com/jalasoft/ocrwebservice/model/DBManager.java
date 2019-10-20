@@ -10,7 +10,9 @@
  */
 package com.jalasoft.ocrwebservice.model;
 
+import com.jalasoft.ocrwebservice.controller.Response;
 import com.jalasoft.ocrwebservice.database.DBQuery;
+import ocrwebservice.database.User;
 /**
  * *
  * Manages all statements to the database
@@ -21,6 +23,8 @@ public class DBManager {
     public DBManager() {
         dbq = new DBQuery();
     }
+
+
     public void addFile(String checksum, String path) {
         dbq.insert(checksum, path);
     }
@@ -33,4 +37,6 @@ public class DBManager {
     public void updatePath(String checksum, String path) {
         dbq.updatePath(checksum,path);
     }
+
+
 }

@@ -13,11 +13,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestController
 public class CustomResponseHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(MyFileNotFoundException.class)
-    public final ResponseEntity<Response> handleNotFoundException(MyFileNotFoundException ex,
+    public final ResponseEntity<ResponseBody> handleNotFoundException(MyFileNotFoundException ex,
                                                                   WebRequest request) {
-        Response exceptionResponse = new Response( ex.getMessage(),
-                request.getDescription(false),
-                HttpStatus.NOT_ACCEPTABLE.getReasonPhrase());
-        return new ResponseEntity<Response>(exceptionResponse, HttpStatus.NOT_ACCEPTABLE);
+        Response exceptionResponse= new Response();
+        exceptionResponse.badRequest("File not found or" + ex.getMessage());
+
+        return ResponseEntity.status(exceptionResponse.getHttpStatus()).body(exceptionResponse.getBody());
     }
 }

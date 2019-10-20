@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 /**
  * *
- * DB Query contains tra
+ * DB Query contains SQL transactions to manage fileSt
  *
  */
 public class DBQuery {
@@ -81,4 +81,5 @@ public class DBQuery {
             e.printStackTrace();
         }
     }
+
 }
