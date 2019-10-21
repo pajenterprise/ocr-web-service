@@ -10,7 +10,7 @@ import javax.xml.bind.DatatypeConverter;
 
 public class TokenService {
 
-    public static void  saveToken(User user1)  {
+    public static String  saveToken(User user1)  {
       //  PrivateKey privateKey = loadEcPrivateKeyFromConfiguration();
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("DevFund2");
@@ -21,6 +21,7 @@ public class TokenService {
                 .claim("role","admin")
                 .compact();
         Cache.getInstance().add(token);
+        return token;
     }
 
 

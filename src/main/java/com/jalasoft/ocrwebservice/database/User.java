@@ -5,16 +5,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "users")
+
 public class User {
 
-    @Id
-    @NotNull
-    @Column(name = "userId")
     private String userId;
-    @NotNull
-    @Column(name = "password")
     private String password;
     /**
      * Constructor.

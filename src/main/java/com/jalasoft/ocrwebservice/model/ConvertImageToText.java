@@ -57,7 +57,10 @@ public class ConvertImageToText implements IConvert{
 
             e.printStackTrace();
         }
-
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         return ("result.txt");
     }
 }

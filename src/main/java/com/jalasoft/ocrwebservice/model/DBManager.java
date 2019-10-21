@@ -10,9 +10,8 @@
  */
 package com.jalasoft.ocrwebservice.model;
 
-import com.jalasoft.ocrwebservice.controller.Response;
 import com.jalasoft.ocrwebservice.database.DBQuery;
-import ocrwebservice.database.User;
+
 /**
  * *
  * Manages all statements to the database

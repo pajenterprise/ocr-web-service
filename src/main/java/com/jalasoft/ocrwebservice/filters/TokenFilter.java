@@ -15,8 +15,11 @@ public class TokenFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         String url = req.getRequestURL().toString();
-       if (Cache.getInstance().isValid(req.getHeader("authorization"))){
-
+        System.out.println(url);
+        System.out.println(req.getHeader("Authorization"));
+        String token = req.getHeader("Authorization");
+       if (url.contains("/login") || Cache.getInstance().isValid(token.split(" ")[1])){
+           System.out.println("444444444444444444");
             chain.doFilter(request,response);
         }
         else{

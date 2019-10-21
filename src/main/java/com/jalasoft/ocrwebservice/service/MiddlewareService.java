@@ -2,28 +2,40 @@ package com.jalasoft.ocrwebservice.service;
 
 import com.jalasoft.ocrwebservice.controller.Response;
 import com.jalasoft.ocrwebservice.database.DBQueryUser;
+import com.jalasoft.ocrwebservice.database.Employee;
 import com.jalasoft.ocrwebservice.database.User;
+import org.springframework.http.HttpStatus;
+
+import java.util.ArrayList;
 
 
 public class MiddlewareService {
 
 
-    public Response validateUser(User user) {
-        Response resp = new Response();
+    public String validateUser(User user) {
+
+        Response<User> resp = new Response<User>();
+
         DBQueryUser dbq = new DBQueryUser();
 
 
         if (user == null) {
-            return resp.badRequest("User");
+            return "Bad user";
         } else {
 
             if (!dbq.existUser(user.getId(),user.getPassword())) {
-                return resp.NotFound("User");
+                return "Not found";
             }
         }
-        TokenService.saveToken(user);
-        System.out.println("Token saved");
-        return resp.OK("Valid User");
+        String token =TokenService.saveToken(user);
+        System.out.println(token);
+        resp
+                .setHttpStatus(HttpStatus.OK)
+                .getBody()
+                .setTextMessage(token)
+                .setData(new ArrayList<>());
+        return token;
+
     }
 
 }

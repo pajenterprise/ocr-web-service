@@ -29,7 +29,7 @@ public class DBQueryEmployee {
 
     public String getPath(String id) {
         String path = null;
-        String sql ="SELECT photoPath from employee where employeeID = '"+id+"'";
+        String sql ="SELECT photoPath from employee where employeeId = '"+id+"'";
         Connection conn = ConnectionDB.getInstance().getConnection();
         Statement state;
         try {
@@ -60,14 +60,15 @@ public class DBQueryEmployee {
             e.printStackTrace();
         }
     }
-    public void updatePath (String checksum, String path) {
-        String sql="UPDATE filest SET path = ? WHERE checksum = ?";
+    public void updatePath (String id, String path) {
+        String sql="UPDATE employee SET photoPath=? WHERE employeeId=?";
         Connection conn = ConnectionDB.getInstance().getConnection();
         PreparedStatement state;
         try {
             state = conn.prepareStatement(sql);
             state.setString (1,path);
-            state.setString (2,checksum);
+            state.setString (2,id);
+
             state.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,7 +82,7 @@ public class DBQueryEmployee {
     public List<Employee> getAllEmployees() {
         List<Employee> employees= new ArrayList<>();
         Employee emp;
-        String sql ="SELECT employeeID,name,lastName,jobTitle,hiredDate,photoPath from employee";
+        String sql ="SELECT employeeId,name,lastName,jobTitle,hiredDate,photoPath from employee";
         Connection conn = ConnectionDB.getInstance().getConnection();
         Statement state;
         try {
@@ -101,5 +102,18 @@ public class DBQueryEmployee {
             e.printStackTrace();
         }
         return employees;
+    }
+
+    public void deleteEmployee(String id) {
+        String sql ="DELETE FROM employee WHERE employeeId = ?";
+        Connection conn = ConnectionDB.getInstance().getConnection();
+        PreparedStatement state;
+        try {
+            state = conn.prepareStatement(sql);
+            state.setString (1,id);
+            state.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
