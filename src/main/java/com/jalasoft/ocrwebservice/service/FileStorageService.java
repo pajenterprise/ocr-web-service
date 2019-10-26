@@ -1,19 +1,37 @@
+/*
+ * Copyright (c) 2019 Jalasoft.
+ *
+ * This software is the confidential and proprietary information of Jalasoft.
+ * ("Confidential Information"). You shall not
+ * disclose such Confidential Information and shall use it only in
+ * accordance with the terms of the license agreement you entered into
+ * with Jalasoft.
+ */
 package com.jalasoft.ocrwebservice.service;
 
 import com.jalasoft.ocrwebservice.exception.FileStorageException;
+import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
+import com.jalasoft.ocrwebservice.validation.Context;
+import com.jalasoft.ocrwebservice.validation.IValidateStrategy;
+import com.jalasoft.ocrwebservice.validation.NullValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.jalasoft.ocrwebservice.util.Constant.RESOURCE_DIR;
-
+/**
+ * Files management
+ * @author Alejandra Neolopan
+ * @version 1.1 26 Oct 2019
+ */
 @Service
 public class FileStorageService {
 
@@ -21,6 +39,7 @@ public class FileStorageService {
 
     @Autowired
     public FileStorageService() {
+
         this.fileStorageLocation = Paths.get(RESOURCE_DIR);
 
         try {
@@ -29,8 +48,11 @@ public class FileStorageService {
             throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
-
-    public String storeFile(MultipartFile file) {
+/**
+ * Copies the uploaded file to a local path and return path
+ */
+    public String storeFile(MultipartFile file) throws ParameterInvalidException {
+        validate (file);
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
@@ -49,7 +71,13 @@ public class FileStorageService {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
-    public String storeFile(MultipartFile file, String id) {
+
+
+    /**
+     * Copies the uploaded file with a new id as filename
+     */
+    public String storeFile(MultipartFile file, String id) throws ParameterInvalidException {
+        validate (file);
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
@@ -63,10 +91,20 @@ public class FileStorageService {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             String[] fileNameSplits = fileName.split("\\.");
-            Files.move(targetLocation, targetLocation.resolveSibling(id + "." + fileNameSplits[fileNameSplits.length - 1]), StandardCopyOption.REPLACE_EXISTING);
-            return targetLocation.normalize().toString();
+            Path newPath = targetLocation.resolveSibling(id + "." + fileNameSplits[fileNameSplits.length - 1]);
+            Files.move(targetLocation, newPath, StandardCopyOption.REPLACE_EXISTING);
+            return newPath.normalize().toString();
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
+
+
+    }
+    private void validate(MultipartFile item) throws ParameterInvalidException {
+        List<IValidateStrategy> val;
+        val = new ArrayList<>();
+        val.add(new NullValidation(item, "file"));
+        Context con = new Context(val);
+        con.validate();
     }
 }

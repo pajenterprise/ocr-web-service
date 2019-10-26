@@ -15,15 +15,25 @@ public class TokenFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         String url = req.getRequestURL().toString();
-        System.out.println(url);
-        System.out.println(req.getHeader("Authorization"));
-        String token = req.getHeader("Authorization");
-       if (url.contains("/login") || Cache.getInstance().isValid(token.split(" ")[1])){
-           System.out.println("444444444444444444");
+
+          String token = req.getHeader("Authorization");
+       if (url.contains("/login")){
+
             chain.doFilter(request,response);
         }
         else{
+            if (token == null){
             res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token invalid");
+            }
+           else{
+               if(Cache.getInstance().isValid(token.split(" ")[1])) {
+
+                   chain.doFilter(request, response);
+               }else{
+                   res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token invalid");
+               }
+           }
+
         }
     }
 }

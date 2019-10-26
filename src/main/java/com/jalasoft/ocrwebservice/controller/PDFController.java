@@ -10,7 +10,7 @@
 package com.jalasoft.ocrwebservice.controller;
 
 import com.jalasoft.ocrwebservice.exception.LanguageException;
-import com.jalasoft.ocrwebservice.model.*;
+import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 import com.jalasoft.ocrwebservice.service.FileStorageService;
 import com.jalasoft.ocrwebservice.util.*;
 import org.slf4j.Logger;
@@ -18,10 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import static com.jalasoft.ocrwebservice.util.Constant.RESOURCE_DIR;
+
 @RestController
 public class PDFController {
-    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
+    private static final Logger logger = LoggerFactory.getLogger(OCRController.class);
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -29,7 +29,7 @@ public class PDFController {
     public String uploadPDF(@RequestParam("file") MultipartFile file,
                             @RequestParam(value = "type", defaultValue = "jpg") String type,
                             @RequestParam(value = "width", defaultValue = "600") int width,
-                            @RequestParam(value = "height", defaultValue = "800") int height) {
+                            @RequestParam(value = "height", defaultValue = "800") int height) throws ParameterInvalidException {
         // Verifying the correct type
         if (type.equalsIgnoreCase(ImageType.JPG.getExtension()) ||
                 type.equalsIgnoreCase(ImageType.PNG.getExtension()) ||

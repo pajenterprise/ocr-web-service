@@ -21,8 +21,8 @@ package com.jalasoft.ocrwebservice.model;
 public class CriteriaImage extends Criteria{
     private String fileName;
 
-    public CriteriaImage(String sourcePath, String fileName) {
-        super(sourcePath, fileName);
+    public CriteriaImage(String fileName) {
+        super(fileName);
         this.fileName = fileName;
 
     }

@@ -75,8 +75,23 @@ public class DBQueryEmployee {
         }
     }
 
-    public boolean existUser(String name, String password) {
-        return true;
+    public boolean existEmployee(String id) {
+        String name = null;
+        String sql ="SELECT name from employee where employeeId = '"+id+"'";
+        Connection conn = ConnectionDB.getInstance().getConnection();
+        Statement state;
+        try {
+            state = conn.createStatement();
+
+            ResultSet result = state.executeQuery(sql);
+
+            while (result.next()) {
+                name = result.getString("name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return (name != null);
     }
 
     public List<Employee> getAllEmployees() {

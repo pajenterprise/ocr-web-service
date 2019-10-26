@@ -13,10 +13,12 @@ package com.jalasoft.ocrwebservice.model;
  * with Jalasoft.
  */
 
+import com.jalasoft.ocrwebservice.exception.ConvertException;
+
 /**
  * The interface is an abstraction of multiple converts
  */
 public interface IConvert {
 
-    String Convert(Criteria cri);
+    String Convert(Criteria cri) throws ConvertException;
 }

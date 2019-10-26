@@ -14,6 +14,8 @@ package com.jalasoft.ocrwebservice.model;
  */
 
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
+import com.jalasoft.ocrwebservice.validation.LangValidation;
+import com.jalasoft.ocrwebservice.validation.NullValidation;
 
 /**
  * *
@@ -26,8 +28,8 @@ import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 public class CriteriaText extends Criteria {
     private String fileName;
     private String lang;
-    public CriteriaText(String sourcePath, String fileName, String language) {
-        super(sourcePath, fileName);
+    public CriteriaText(String fileName, String language) {
+        super(fileName);
         this.fileName = fileName;
         lang = language;
     }
@@ -43,13 +45,9 @@ public class CriteriaText extends Criteria {
 
     @Override
     public void validate() throws ParameterInvalidException {
+        val.add(new NullValidation(this.lang, "language"));
+        val.add(new NullValidation(this.fileName, "file"));
+        val.add(new LangValidation(this.lang));
         super.validate();
-        if (this.lang.isEmpty()){
-            throw new ParameterInvalidException(11, "lang");
-        }
-        if (this.lang == null){
-            throw new ParameterInvalidException(10, "lang");
-        }
-
     }
 }

@@ -13,34 +13,33 @@ package com.jalasoft.ocrwebservice.model;
  * with Jalasoft.
  */
 
-import com.jalasoft.ocrwebservice.util.Constant;
+import com.jalasoft.ocrwebservice.exception.ConvertException;
+import com.jalasoft.ocrwebservice.exception.MyFileNotFoundException;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-
-import static com.jalasoft.ocrwebservice.util.Constant.RESOURCE_DIR;
+import static com.jalasoft.ocrwebservice.util.Constant.*;
 
 /**
- * The ConvertImageToText class provides make a new result.txt file in the project folder
+ * The OCRConvert class provides make a new result.txt file in the project folder
  * given an Object Criteria that contains a path of a image file.
  */
-public class ConvertImageToText implements IConvert{
+public class OCRConvert implements IConvert{
 
     @Override
-    public String Convert(Criteria cri) {
+    public String Convert(Criteria cri) throws ConvertException {
         ITesseract instance = new Tesseract();
         // path to tessdata directory
-        instance.setDatapath("thirdParty/Tess4J/tessdata");
+        instance.setDatapath(TES4J_PATH);
         instance.setLanguage(cri.getAttribute());
 
         try {
             String result = instance.doOCR(cri.getFile());
-            String filePath = RESOURCE_DIR + "output.txt";
+            String filePath = OUTPUT_FILE;
             File output = new File(filePath);
             PrintWriter writer = new PrintWriter(output.getPath(), "UTF-8");
             writer.println(result);
@@ -48,19 +47,20 @@ public class ConvertImageToText implements IConvert{
 
         } catch (TesseractException e) {
 
-            return(e.getMessage());
+            throw new ConvertException("Error converting File", e);
 
         } catch (FileNotFoundException e) {
 
-            e.printStackTrace();
+            throw new MyFileNotFoundException("File not found");
+
         } catch (UnsupportedEncodingException e) {
 
-            e.printStackTrace();
+            throw new ConvertException("Encoding file not supported", e);
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            throw new ConvertException(e.getMessage(), e);
         }
-        return ("result.txt");
+        return (OUTPUT_PATH + "\\" + OUTPUT_FILE);
     }
 }

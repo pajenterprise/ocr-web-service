@@ -10,17 +10,12 @@
 package com.jalasoft.ocrwebservice.controller;
 
 import com.jalasoft.ocrwebservice.database.User;
-import com.jalasoft.ocrwebservice.service.MiddlewareService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.jalasoft.ocrwebservice.service.UserService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-
 import javax.validation.Valid;
-
 
 /**
  * Service to login.
@@ -28,14 +23,14 @@ import javax.validation.Valid;
 @RestController
 public class LoginController {
 
-    private MiddlewareService service;
+    private UserService service;
 
     /**
      * @return Response entity.
      */
     @RequestMapping(method = RequestMethod.POST, value = "/login")
     public String validate(final @RequestBody @Valid User user)  {
-        service= new MiddlewareService();
+        service= new UserService();
         String token = service.validateUser(user);
         System.out.println("Authenticated");
         return token;

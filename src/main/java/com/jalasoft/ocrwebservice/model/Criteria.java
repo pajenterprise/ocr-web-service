@@ -1,5 +1,3 @@
-package com.jalasoft.ocrwebservice.model;
-
 /*
  * IConvert
  * Version 1
@@ -12,13 +10,18 @@ package com.jalasoft.ocrwebservice.model;
  * accordance with the terms of the license agreement you entered into
  * with Jalasoft.
  */
+package com.jalasoft.ocrwebservice.model;
 
 import com.jalasoft.ocrwebservice.exception.FileStorageException;
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
+import com.jalasoft.ocrwebservice.validation.Context;
+import com.jalasoft.ocrwebservice.validation.IValidateStrategy;
 
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * *
@@ -29,18 +32,26 @@ public abstract class Criteria {
     private File filePath;
     private String fileName;
     private String checksum ="123";
+    List<IValidateStrategy> val;
 
-    public Criteria(String sourcePath, String fileName){
-        filePath = new File(sourcePath + fileName);
+    public Criteria(String fileName){
+        val = new ArrayList<>();
+        filePath = new File( fileName);
+        System.out.println("filepath: " +filePath);
         this.fileName = fileName;
         DBManager db=new DBManager();
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            String checksum = md.digest().toString();
+            checksum = md.digest().toString();
+            System.out.println("checksum" + checksum);
         }catch (NoSuchAlgorithmException e){
             new FileStorageException("Error when generating checksum");
         }
         db.addFile(checksum,fileName);
+    }
+
+    public Criteria() {
+        val = new ArrayList<>();
     }
 
     public File getFile() {
@@ -51,11 +62,7 @@ public abstract class Criteria {
     public abstract String getFileName();
 
     public void validate() throws ParameterInvalidException {
-       /* if (filePath.isEmpty()){
-            throw new ParameterInvalidException(11, "filePath");
-        }*/
-        if (this.filePath == null){
-            throw new ParameterInvalidException(10, "filePath");
-        }
+        Context context = new Context(val);
+        context.validate();
     }
 }

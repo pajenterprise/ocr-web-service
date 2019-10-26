@@ -1,13 +1,20 @@
+/*
+ * Copyright (c) 2019 Jalasoft.
+ *
+ * This software is the confidential and proprietary information of Jalasoft.
+ * ("Confidential Information"). You shall not
+ * disclose such Confidential Information and shall use it only in
+ * accordance with the terms of the license agreement you entered into
+ * with Jalasoft.
+ */
 package com.jalasoft.ocrwebservice.controller;
 
 import com.jalasoft.ocrwebservice.database.Employee;
-import com.jalasoft.ocrwebservice.service.Cache;
+import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 import com.jalasoft.ocrwebservice.service.EmployeeService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -23,18 +30,7 @@ public class CRUDController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/api/v1/employee")
     public ResponseEntity<ResponseBody> getAll(HttpServletRequest req) {
-        //validation
-        String auth,token="";
-        auth= req.getHeader("Authorization");
-        if (auth !=null) {
-            token = auth.split(" ")[1];
-        }
-        if (!Cache.getInstance().isValid(token)){
-            ResponseBody body = new ResponseBody<>();
-            body.setTextMessage("Authorization header is not present or Token is invalid");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
-        }
-        //-----------
+
         service = new EmployeeService();
         Response response = service.getAllEmployees();
         return ResponseEntity.status(response.getHttpStatus()).body(response.getBody());
@@ -57,7 +53,7 @@ public class CRUDController {
      * @return Response entity.
      */
     @RequestMapping(method = RequestMethod.POST, value = "/api/v1/employee")
-    public ResponseEntity<ResponseBody> add(final @RequestBody @Valid Employee emp) {
+    public ResponseEntity<ResponseBody> add(final @RequestBody @Valid Employee emp) throws ParameterInvalidException {
         service = new EmployeeService();
         Response response = service.addEmployee(emp);
         return ResponseEntity.status(response.getHttpStatus()).body(response.getBody());
@@ -70,7 +66,7 @@ public class CRUDController {
      */
     @RequestMapping(method = RequestMethod.PUT, value = "/api/v1/employee/{id}")
     public ResponseEntity<ResponseBody> updatePicture(final @PathVariable String id,
-            @RequestParam MultipartFile photoPath) {
+            @RequestParam MultipartFile photoPath) throws ParameterInvalidException {
         service = new EmployeeService();
         Response response = service.updateEmployee(id, photoPath);
         return ResponseEntity.status(response.getHttpStatus()).body(response.getBody());
@@ -81,7 +77,7 @@ public class CRUDController {
      * @return Response entity.
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/api/v1/employee/{id}")
-    public ResponseEntity<ResponseBody> delete(final @PathVariable String id) {
+    public ResponseEntity<ResponseBody> delete(final @PathVariable String id) throws ParameterInvalidException {
     service = new EmployeeService();
         Response response = service.deleteEmployee(id);
         return ResponseEntity.status(response.getHttpStatus()).body(response.getBody());

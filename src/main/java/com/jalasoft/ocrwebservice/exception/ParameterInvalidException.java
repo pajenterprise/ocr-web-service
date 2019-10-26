@@ -18,6 +18,9 @@ public class ParameterInvalidException extends Exception {
             case 11:
                 this.message = "the param " + params + "is empty";
                 break;
+            case 12:
+                this.message = "the param " + params + " does not exist in dataset";
+                break;
         }
         return message;
     }
