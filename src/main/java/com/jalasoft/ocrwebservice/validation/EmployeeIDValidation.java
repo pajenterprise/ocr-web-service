@@ -10,6 +10,7 @@
 package com.jalasoft.ocrwebservice.validation;
 
 import com.jalasoft.ocrwebservice.database.DBQueryEmployee;
+import com.jalasoft.ocrwebservice.exception.DBException;
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 /**
  * Verifies Employee Id exist in db
@@ -25,7 +26,7 @@ public class EmployeeIDValidation implements IValidateStrategy {
     }
 
     @Override
-    public boolean validate() throws ParameterInvalidException {
+    public boolean validate() throws ParameterInvalidException, DBException {
         DBQueryEmployee dbq = new DBQueryEmployee();
         if(dbq.existEmployee(value)) {
             return true;

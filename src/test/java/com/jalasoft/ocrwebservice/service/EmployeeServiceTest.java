@@ -1,7 +1,6 @@
 package com.jalasoft.ocrwebservice.service;
 
 import com.jalasoft.ocrwebservice.controller.Response;
-import com.jalasoft.ocrwebservice.database.Employee;
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +24,7 @@ public void init(){
 
     @Test
     public void errorWhenUpdateEmployeeNull() throws ParameterInvalidException {
-        Response response = service.updateEmployee(null, null);
+        Response response = service.updateEmployeePhoto(null, null);
         assertEquals( HttpStatus.BAD_REQUEST,response.getHttpStatus());
     }
 

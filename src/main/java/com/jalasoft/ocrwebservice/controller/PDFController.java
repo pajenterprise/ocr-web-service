@@ -9,6 +9,7 @@
  */
 package com.jalasoft.ocrwebservice.controller;
 
+import com.jalasoft.ocrwebservice.exception.DBException;
 import com.jalasoft.ocrwebservice.exception.LanguageException;
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 import com.jalasoft.ocrwebservice.service.FileStorageService;
@@ -29,7 +30,7 @@ public class PDFController {
     public String uploadPDF(@RequestParam("file") MultipartFile file,
                             @RequestParam(value = "type", defaultValue = "jpg") String type,
                             @RequestParam(value = "width", defaultValue = "600") int width,
-                            @RequestParam(value = "height", defaultValue = "800") int height) throws ParameterInvalidException {
+                            @RequestParam(value = "height", defaultValue = "800") int height) throws ParameterInvalidException, DBException {
         // Verifying the correct type
         if (type.equalsIgnoreCase(ImageType.JPG.getExtension()) ||
                 type.equalsIgnoreCase(ImageType.PNG.getExtension()) ||

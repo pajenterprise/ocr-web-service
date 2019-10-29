@@ -12,6 +12,7 @@
  */
 package com.jalasoft.ocrwebservice.model;
 
+import com.jalasoft.ocrwebservice.exception.DBException;
 import com.jalasoft.ocrwebservice.exception.FileStorageException;
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 import com.jalasoft.ocrwebservice.validation.Context;
@@ -61,7 +62,7 @@ public abstract class Criteria {
     public abstract String getAttribute();
     public abstract String getFileName();
 
-    public void validate() throws ParameterInvalidException {
+    public void validate() throws ParameterInvalidException, DBException {
         Context context = new Context(val);
         context.validate();
     }

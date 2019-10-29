@@ -9,6 +9,7 @@
  */
 package com.jalasoft.ocrwebservice.service;
 
+import com.jalasoft.ocrwebservice.exception.DBException;
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 import com.jalasoft.ocrwebservice.validation.*;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class Service<T> {
     public Service(){
     }
 
-    public void validate(T value, String id) throws ParameterInvalidException {
+    public void validate(T value, String id) throws ParameterInvalidException, DBException {
         val = new ArrayList<>();
         val.add(new NullValidation(value, id));
 

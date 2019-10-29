@@ -13,6 +13,7 @@ package com.jalasoft.ocrwebservice.model;
  * with Jalasoft.
  */
 
+import com.jalasoft.ocrwebservice.exception.DBException;
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 import com.jalasoft.ocrwebservice.validation.LangValidation;
 import com.jalasoft.ocrwebservice.validation.NullValidation;
@@ -44,7 +45,7 @@ public class CriteriaText extends Criteria {
     }
 
     @Override
-    public void validate() throws ParameterInvalidException {
+    public void validate() throws ParameterInvalidException, DBException {
         val.add(new NullValidation(this.lang, "language"));
         val.add(new NullValidation(this.fileName, "file"));
         val.add(new LangValidation(this.lang));

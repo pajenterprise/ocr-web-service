@@ -9,6 +9,7 @@
  */
 package com.jalasoft.ocrwebservice.validation;
 
+import com.jalasoft.ocrwebservice.exception.DBException;
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 import java.util.List;
 /**
@@ -23,7 +24,7 @@ public class Context {
         this.strategyList = strategies;
     }
     //2nd: to have a method execute the strategy
-    public void validate() throws ParameterInvalidException{
+    public void validate() throws ParameterInvalidException, DBException {
         for(IValidateStrategy str:strategyList){
             str.validate();
         }

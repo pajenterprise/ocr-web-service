@@ -73,7 +73,7 @@ public class CustomResponseHandler extends ResponseEntityExceptionHandler {
         exceptionResponse
                 .setHttpStatus(HttpStatus.BAD_REQUEST)
                 .getBody()
-                .setTextMessage("Conversion exception")
+                .setTextMessage("Conversion exception" )
                 .setData(new ArrayList<>());
 
         return ResponseEntity.status(exceptionResponse.getHttpStatus()).body(exceptionResponse.getBody());
@@ -87,6 +87,18 @@ public class CustomResponseHandler extends ResponseEntityExceptionHandler {
                 .setHttpStatus(HttpStatus.CONFLICT)
                 .getBody()
                 .setTextMessage("An error occurred saving file")
+                .setData(new ArrayList<>());
+
+        return ResponseEntity.status(exceptionResponse.getHttpStatus()).body(exceptionResponse.getBody());
+    }
+    @ExceptionHandler(DBException.class)
+    public final ResponseEntity<ResponseBody> databaseHandle(DBException ex,
+                                                                WebRequest request) {
+        Response exceptionResponse = new Response();
+        exceptionResponse
+                .setHttpStatus(HttpStatus.CONFLICT)
+                .getBody()
+                .setTextMessage("An error occurred in database: " + ex.getMessage())
                 .setData(new ArrayList<>());
 
         return ResponseEntity.status(exceptionResponse.getHttpStatus()).body(exceptionResponse.getBody());

@@ -9,6 +9,7 @@
  */
 package com.jalasoft.ocrwebservice.service;
 
+import com.jalasoft.ocrwebservice.exception.DBException;
 import com.jalasoft.ocrwebservice.exception.FileStorageException;
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 import com.jalasoft.ocrwebservice.validation.Context;
@@ -51,7 +52,7 @@ public class FileStorageService {
 /**
  * Copies the uploaded file to a local path and return path
  */
-    public String storeFile(MultipartFile file) throws ParameterInvalidException {
+    public String storeFile(MultipartFile file) throws ParameterInvalidException, DBException {
         validate (file);
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -76,7 +77,7 @@ public class FileStorageService {
     /**
      * Copies the uploaded file with a new id as filename
      */
-    public String storeFile(MultipartFile file, String id) throws ParameterInvalidException {
+    public String storeFile(MultipartFile file, String id) throws ParameterInvalidException, DBException {
         validate (file);
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -93,14 +94,14 @@ public class FileStorageService {
             String[] fileNameSplits = fileName.split("\\.");
             Path newPath = targetLocation.resolveSibling(id + "." + fileNameSplits[fileNameSplits.length - 1]);
             Files.move(targetLocation, newPath, StandardCopyOption.REPLACE_EXISTING);
-            return newPath.normalize().toString();
+            return id + "." + fileNameSplits[fileNameSplits.length - 1];
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
 
 
     }
-    private void validate(MultipartFile item) throws ParameterInvalidException {
+    private void validate(MultipartFile item) throws ParameterInvalidException, DBException {
         List<IValidateStrategy> val;
         val = new ArrayList<>();
         val.add(new NullValidation(item, "file"));

@@ -10,6 +10,7 @@
 package com.jalasoft.ocrwebservice.controller;
 
 import com.jalasoft.ocrwebservice.database.Employee;
+import com.jalasoft.ocrwebservice.exception.DBException;
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 import com.jalasoft.ocrwebservice.service.EmployeeService;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class CRUDController {
      * @return Response entity.
      */
     @RequestMapping(method = RequestMethod.GET, value = "/api/v1/employee")
-    public ResponseEntity<ResponseBody> getAll(HttpServletRequest req) {
+    public ResponseEntity<ResponseBody> getAll(HttpServletRequest req) throws DBException {
 
         service = new EmployeeService();
         Response response = service.getAllEmployees();
@@ -41,21 +42,31 @@ public class CRUDController {
      * @param id String
      * @return Response entity..
      */
-   /* @RequestMapping(method = RequestMethod.GET, value = "/api/v1/employee/{id}")
-    public ResponseEntity<ResponseBody> getById(final @PathVariable String id) {
+    @RequestMapping(method = RequestMethod.GET, value = "/api/v1/employee/{id}")
+    public ResponseEntity<ResponseBody> getById(final @PathVariable String id) throws DBException, ParameterInvalidException {
         service = new EmployeeService();
         Response response = service.getById(id);
         return ResponseEntity.status(response.getHttpStatus()).body(response.getBody());
-    }*/
+    }
 
     /**
      * @param emp Employee
      * @return Response entity.
      */
     @RequestMapping(method = RequestMethod.POST, value = "/api/v1/employee")
-    public ResponseEntity<ResponseBody> add(final @RequestBody @Valid Employee emp) throws ParameterInvalidException {
+    public ResponseEntity<ResponseBody> add(final @RequestBody @Valid Employee emp) throws ParameterInvalidException, DBException {
         service = new EmployeeService();
         Response response = service.addEmployee(emp);
+        return ResponseEntity.status(response.getHttpStatus()).body(response.getBody());
+    }
+    /**
+     * @param emp Employee
+     * @return Response entity.
+     */
+    @RequestMapping(method = RequestMethod.PATCH, value = "/api/v1/employee")
+    public ResponseEntity<ResponseBody> update(final @RequestBody @Valid Employee emp) throws ParameterInvalidException, DBException {
+        service = new EmployeeService();
+        Response response = service.updateEmployee(emp);
         return ResponseEntity.status(response.getHttpStatus()).body(response.getBody());
     }
 
@@ -66,9 +77,9 @@ public class CRUDController {
      */
     @RequestMapping(method = RequestMethod.PUT, value = "/api/v1/employee/{id}")
     public ResponseEntity<ResponseBody> updatePicture(final @PathVariable String id,
-            @RequestParam MultipartFile photoPath) throws ParameterInvalidException {
+            @RequestParam MultipartFile photoPath) throws ParameterInvalidException, DBException {
         service = new EmployeeService();
-        Response response = service.updateEmployee(id, photoPath);
+        Response response = service.updateEmployeePhoto(id, photoPath);
         return ResponseEntity.status(response.getHttpStatus()).body(response.getBody());
     }
 
@@ -77,7 +88,7 @@ public class CRUDController {
      * @return Response entity.
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/api/v1/employee/{id}")
-    public ResponseEntity<ResponseBody> delete(final @PathVariable String id) throws ParameterInvalidException {
+    public ResponseEntity<ResponseBody> delete(final @PathVariable String id) throws ParameterInvalidException, DBException {
     service = new EmployeeService();
         Response response = service.deleteEmployee(id);
         return ResponseEntity.status(response.getHttpStatus()).body(response.getBody());

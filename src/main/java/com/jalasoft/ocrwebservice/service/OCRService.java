@@ -2,6 +2,7 @@ package com.jalasoft.ocrwebservice.service;
 
 import com.jalasoft.ocrwebservice.controller.Response;
 import com.jalasoft.ocrwebservice.exception.ConvertException;
+import com.jalasoft.ocrwebservice.exception.DBException;
 import com.jalasoft.ocrwebservice.exception.ParameterInvalidException;
 import com.jalasoft.ocrwebservice.model.Criteria;
 import com.jalasoft.ocrwebservice.model.CriteriaText;
@@ -33,10 +34,10 @@ public class OCRService {
             response
                     .setHttpStatus(HttpStatus.OK)
                     .getBody()
-                    .setTextMessage("converted succesfully")
+                    .setTextMessage("converted successfully")
                     .setData(list);
             return response;
-        } catch (ConvertException e) {
+        } catch (ConvertException | DBException e) {
             throw new ConvertException("Error occurred in conversion", e);
         }
     }
